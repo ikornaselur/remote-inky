@@ -1,10 +1,13 @@
 import os
+import time
 from typing import Tuple
 
 from PIL import Image
 from flask import Blueprint, request
 from flask.globals import current_app
 from werkzeug.utils import secure_filename
+
+from remote_inky.inky import WHITE, Inky
 
 bp = Blueprint("inky", __name__, url_prefix="")
 
@@ -33,9 +36,25 @@ def image() -> Tuple[str, int]:
     file_path = os.path.join("/tmp", filename)
     file.save(file_path)
 
+    saturation = float(request.form.get("saturation", 0.5))
+
     image = Image.open(file_path)
-    inky = current_app.config["inky"]
-    inky.set_image(image, saturation=0.5)
+    inky: Inky = current_app.config["inky"]
+    inky.set_image(image, saturation=saturation)
     inky.show()
 
-    return "Updated!", 200
+    return f"Updated with saturation {saturation}!", 200
+
+
+@bp.route("/clear", methods=("POST",))
+def clear() -> Tuple[str, int]:
+    inky: Inky = current_app.config["inky"]
+    for _ in range(2):
+        for y in range(inky.HEIGHT - 1):
+            for x in range(inky.WIDTH - 1):
+                inky.set_pixel(x, y, WHITE)
+
+        inky.show()
+        time.sleep(1)
+
+    return "Screen cleared", 200
