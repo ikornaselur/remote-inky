@@ -23,6 +23,8 @@ def create_app() -> Flask:
 
     @app.before_request
     def before_request() -> None:
+        if request.method == "OPTIONS":
+            return
         request_token = request.headers.get("x-api-token")
         if request_token != token:
             abort(403)
