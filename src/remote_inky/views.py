@@ -8,6 +8,7 @@ from flask.globals import current_app
 from werkzeug.utils import secure_filename
 
 from remote_inky.inky import WHITE, Inky
+from remote_inky.utils import resize
 
 bp = Blueprint("inky", __name__, url_prefix="")
 
@@ -38,7 +39,7 @@ def image() -> Tuple[str, int]:
 
     saturation = float(request.form.get("saturation", 0.5))
 
-    image = Image.open(file_path)
+    image = resize(Image.open(file_path), (600, 448))
     inky: Inky = current_app.config["inky"]
     inky.set_image(image, saturation=saturation)
     inky.show()
