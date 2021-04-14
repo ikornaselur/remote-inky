@@ -6,4 +6,4 @@ server:
 		TOKEN=t0k3n \
 		FLASK_APP="src/remote_inky/app.py:create_app" \
 		FLASK_DEBUG=1 \
-		flask run
+		flask run --host=0.0.0.0
