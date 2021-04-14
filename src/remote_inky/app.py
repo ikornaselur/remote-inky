@@ -1,10 +1,12 @@
 import os
 
 from flask import Flask, abort, request
+from flask_cors import CORS
 
 
 def create_app() -> Flask:
     app = Flask(__name__, instance_relative_config=True)
+    CORS(app, origins="*")
     token = os.environ["TOKEN"]
     app.config.from_mapping(
         SECRET_KEY=os.environ["SECRET_KEY"],
