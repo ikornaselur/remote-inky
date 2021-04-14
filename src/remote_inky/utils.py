@@ -22,7 +22,7 @@ def resize(image: Any, resolution: Tuple[int, int]) -> Any:
         )
     else:
         resized = image.resize(
-            (resolution[0], int(resolution[0] // goal_ratio)), Image.ANTIALIAS
+            (resolution[0], int(resolution[0] // image_ratio)), Image.ANTIALIAS
         )
         crop_height = resized.size[1] - resolution[1]
         if crop_height % 2 == 0:
